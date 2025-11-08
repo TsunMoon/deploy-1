@@ -2,7 +2,8 @@
 
 ## ✅ Files Created/Updated:
 
-### 1. **Dockerfile** 
+### 1. **Dockerfile**
+
 - Python 3.11 slim base image
 - Multi-stage caching with requirements.txt
 - Non-root user for security
@@ -10,21 +11,25 @@
 - Dynamic PORT from Railway environment
 
 ### 2. **.dockerignore**
+
 - Optimized build context
 - Excludes unnecessary files
 - Reduces build time and image size
 
 ### 3. **railway.json** (Updated)
+
 - Changed from NIXPACKS to DOCKERFILE builder
 - Points to our custom Dockerfile
 - Health check configuration
 
 ### 4. **Deployment Scripts**
+
 - `deploy-railway-docker.sh` (Linux/Mac)
 - `deploy-railway-docker.ps1` (Windows PowerShell)
 - Automated validation and deployment
 
 ### 5. **RAILWAY_DOCKER_DEPLOY.md**
+
 - Complete deployment guide
 - Environment variables setup
 - Troubleshooting tips
@@ -32,12 +37,14 @@
 ## 🚀 How to Deploy:
 
 ### Method 1: GitHub Integration (Recommended)
+
 1. Push backend folder to GitHub
 2. Connect Railway to your repo
 3. Set root directory to `backend/`
 4. Railway auto-deploys on push
 
 ### Method 2: CLI Deployment
+
 ```bash
 # Windows PowerShell
 cd backend
@@ -49,6 +56,7 @@ cd backend
 ```
 
 ### Method 3: Manual CLI
+
 ```bash
 cd backend
 railway login
@@ -79,6 +87,7 @@ SECRET_KEY=your_secret_key
 - **Auto-scaling**: Railway handles scaling
 
 ## 🔗 Railway URLs:
+
 - API: `https://your-app.railway.app`
 - Health: `https://your-app.railway.app/health`
 - Docs: `https://your-app.railway.app/docs`

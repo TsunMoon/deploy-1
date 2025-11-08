@@ -7,14 +7,16 @@
 Railway sẽ deploy chỉ folder `backend` với cấu hình Docker:
 
 **Files quan trọng:**
+
 - `Dockerfile`: Container configuration
-- `.dockerignore`: Ignore unnecessary files  
+- `.dockerignore`: Ignore unnecessary files
 - `railway.json`: Railway deployment config
 - `requirements.txt`: Python dependencies
 
 ### 2. Cách Deploy
 
 #### Option 1: Deploy từ GitHub (Recommended)
+
 1. Push code lên GitHub repository
 2. Trên Railway dashboard:
    - Tạo new project
@@ -23,6 +25,7 @@ Railway sẽ deploy chỉ folder `backend` với cấu hình Docker:
    - Railway sẽ tự động detect Dockerfile
 
 #### Option 2: Deploy từ CLI
+
 ```bash
 # Install Railway CLI
 npm install -g @railway/cli
@@ -46,7 +49,7 @@ OPENAI_API_KEY=your_openai_api_key
 AZURE_OPENAI_ENDPOINT=your_azure_endpoint
 AZURE_OPENAI_API_KEY=your_azure_key
 
-# Qdrant Configuration  
+# Qdrant Configuration
 QDRANT_URL=your_qdrant_url
 QDRANT_API_KEY=your_qdrant_api_key
 QDRANT_COLLECTION_NAME=netflix_collection
@@ -109,11 +112,13 @@ railway open
 Railway tự động deploy khi push code lên GitHub branch đã connect.
 
 **Auto-deploy triggers:**
+
 - Push to main/master branch
 - Pull request merge
 - Manual trigger từ Railway dashboard
 
 ### Notes:
+
 - Frontend sẽ không được deploy cùng
 - Mọi API endpoints sẽ có Railway domain
 - CORS cần configure cho frontend domain

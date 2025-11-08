@@ -1,0 +1,35 @@
+# FastAPI and Web Server
+fastapi==0.119.0
+uvicorn[standard]==0.37.0
+
+# Environment and Configuration
+python-dotenv==1.1.1
+pydantic==2.12.3
+pyyaml==6.0.3
+
+# OpenAI (compatible with langchain-openai 1.0.2)
+openai>=1.54.0
+
+# Vector Database
+qdrant-client>=1.7.0
+
+# LangChain packages (latest compatible versions)
+langchain>=0.3.7
+langchain-community>=0.3.7  
+langchain-openai>=0.2.9
+langchain-core>=0.3.17
+langchain-text-splitters>=0.3.0
+
+# Additional dependencies
+email-validator==2.1.0
+tokenizers>=0.13.2
+tiktoken>=0.7.0
+
+pydantic[email]>=2.12.3
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.1
+pytest-cov==4.1.0
+pytest-mock==3.12.0

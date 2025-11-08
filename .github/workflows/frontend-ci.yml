@@ -1,0 +1,82 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'frontend/**'
+  push:
+    branches: [main, master]
+    paths:
+      - 'frontend/**'
+
+jobs:
+  test:
+    name: Test Frontend
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+      
+      - name: Check for TypeScript errors (if applicable)
+        working-directory: ./frontend
+        run: |
+          if [ -f "tsconfig.json" ]; then
+            npm run type-check || echo "⚠️ No type-check script"
+          else
+            echo "✅ No TypeScript configuration"
+          fi
+        continue-on-error: true
+      
+      - name: Run linting
+        working-directory: ./frontend
+        run: |
+          npm run lint || echo "⚠️ No lint script configured"
+        continue-on-error: true
+      
+      - name: Build application
+        working-directory: ./frontend
+        run: npm run build
+      
+      - name: Check build output
+        working-directory: ./frontend
+        run: |
+          if [ -d "build" ] || [ -d "dist" ]; then
+            echo "✅ Build successful"
+          else
+            echo "❌ Build directory not found"
+            exit 1
+          fi
+
+  preview:
+    name: Build Preview
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ Frontend build successful! Ready for deployment.'
+            })

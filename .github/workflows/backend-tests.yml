@@ -1,0 +1,82 @@
+name: Backend Tests
+
+on:
+  push:
+    branches: [ main, develop, feature/* ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-tests.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'backend/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('backend/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run linting (optional)
+      run: |
+        cd backend
+        pip install flake8
+        # Stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=__pycache__,venv,.venv
+        # Exit-zero treats all errors as warnings
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --exclude=__pycache__,venv,.venv
+      continue-on-error: true
+    
+    - name: Run tests
+      run: |
+        cd backend
+        pytest --tb=short -v
+      env:
+        # Add any required environment variables here
+        PYTHONPATH: .
+    
+    - name: Run tests with coverage
+      run: |
+        cd backend
+        pytest --cov=. --cov-report=xml --cov-report=term-missing
+      env:
+        PYTHONPATH: .
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/coverage.xml
+        flags: backend
+        name: backend-coverage
+      continue-on-error: true
+    
+    - name: Test Summary
+      if: always()
+      run: |
+        cd backend
+        echo "## Test Results" >> $GITHUB_STEP_SUMMARY
+        pytest --tb=no -q >> $GITHUB_STEP_SUMMARY 2>&1 || true
